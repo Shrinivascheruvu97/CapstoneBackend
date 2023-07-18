@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AccountsDto;
 import com.example.demo.dto.RemaindersDto;
+import com.example.demo.entity.Accounts;
 import com.example.demo.entity.Members;
 
 import com.example.demo.entity.Remainders;
+import com.example.demo.repositroy.AccountsRepository;
 import com.example.demo.service.CommitteeMembersService;
 import com.example.demo.service.EmailService;
 
@@ -34,6 +37,9 @@ public class CommitteeMembersController {
 	@Autowired
     private EmailService emailService;
 
+	
+	@Autowired
+	AccountsRepository accountsRepository;
      public CommitteeMembersController(CommitteeMembersService committeeMembersService) {
             this.committeeMembersService = committeeMembersService;
         }
@@ -193,4 +199,59 @@ public class CommitteeMembersController {
             return ResponseEntity.ok(accountsDtoList);
 
         }
+        
+        
+
+        @GetMapping("/allaccounts")
+
+                public ResponseEntity<List<AccountsDto>> getAllAccounts()
+
+                {
+
+                    List<Accounts> ac = accountsRepository.findAll();
+
+                    List<AccountsDto> dtolist = new ArrayList<>();
+
+                    
+
+                    for (Accounts aclist : ac) {
+
+                        
+
+                        AccountsDto dto = new AccountsDto();
+
+                        Members userid = aclist.getMembers();
+
+                        
+
+                        dto.setEventsBill(aclist.getEventsBill());
+
+                        dto.setExtras(aclist.getEventsBill());
+
+                        dto.setId(aclist.getId());
+
+                        dto.setMaintenanceBill(aclist.getMaintenanceBill());
+
+                        dto.setMonth(aclist.getMonth());
+
+                        dto.setPaidOn(aclist.getPaidOn());
+
+                        dto.setStatus(aclist.getStatus());
+
+                        dto.setTotal(aclist.getTotal());
+
+                        dto.setUserId(userid.getUserId());
+
+                        dto.setWaterBill(aclist.getWaterBill());
+
+                        
+
+                        dtolist.add(dto);
+
+                    }
+
+                    return new ResponseEntity<List<AccountsDto>>(dtolist, HttpStatus.OK);
+
+                }
+        
 }
