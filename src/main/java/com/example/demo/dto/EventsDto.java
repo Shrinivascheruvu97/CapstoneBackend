@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,8 +12,8 @@ public class EventsDto {
 
 	private int  eventId;
     private String eventName;
-    private LocalDate fromDate;
-    private LocalDate toDate;
+    private LocalDateTime fromDate;
+    private LocalDateTime toDate;
     private String status;
     private Integer userId;
 	public int getEventId() {
@@ -27,16 +28,16 @@ public class EventsDto {
 	public void setEventName(String eventName) {
 		this.eventName = eventName;
 	}
-	public LocalDate getFromDate() {
+	public LocalDateTime getFromDate() {
 		return fromDate;
 	}
-	public void setFromDate(LocalDate fromDate) {
+	public void setFromDate(LocalDateTime fromDate) {
 		this.fromDate = fromDate;
 	}
-	public LocalDate getToDate() {
+	public LocalDateTime getToDate() {
 		return toDate;
 	}
-	public void setToDate(LocalDate toDate) {
+	public void setToDate(LocalDateTime toDate) {
 		this.toDate = toDate;
 	}
 	public String getStatus() {
@@ -56,7 +57,7 @@ public class EventsDto {
 		return "EventsDto [eventId=" + eventId + ", eventName=" + eventName + ", fromDate=" + fromDate + ", toDate="
 				+ toDate + ", status=" + status + ", userId=" + userId + "]";
 	}
-	public EventsDto(int eventId, String eventName, LocalDate fromDate, LocalDate toDate, String status,
+	public EventsDto(int eventId, String eventName, LocalDateTime fromDate, LocalDateTime toDate, String status,
 			Integer userId) {
 		super();
 		this.eventId = eventId;

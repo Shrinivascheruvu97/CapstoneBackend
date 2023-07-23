@@ -3,6 +3,7 @@ package com.example.demo.entity;
  
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
  
@@ -29,8 +30,8 @@ public class Events {
     @Column(name="eventId",nullable=false,unique=true)
     private int  eventId;
     private String eventName;
-    private LocalDate fromDate;
-    private LocalDate toDate;
+    private LocalDateTime fromDate;
+    private LocalDateTime toDate;
     private String status;
 
     @ManyToOne
@@ -53,19 +54,19 @@ public class Events {
 		this.eventName = eventName;
 	}
 
-	public LocalDate getFromDate() {
+	public LocalDateTime getFromDate() {
 		return fromDate;
 	}
 
-	public void setFromDate(LocalDate fromDate) {
+	public void setFromDate(LocalDateTime fromDate) {
 		this.fromDate = fromDate;
 	}
 
-	public LocalDate getToDate() {
+	public LocalDateTime getToDate() {
 		return toDate;
 	}
 
-	public void setToDate(LocalDate toDate) {
+	public void setToDate(LocalDateTime toDate) {
 		this.toDate = toDate;
 	}
 
@@ -91,7 +92,7 @@ public class Events {
 				+ toDate + ", status=" + status + ", members=" + members + "]";
 	}
 
-	public Events(int eventId, String eventName, LocalDate fromDate, LocalDate toDate, String status, Members members) {
+	public Events(int eventId, String eventName, LocalDateTime fromDate, LocalDateTime toDate, String status, Members members) {
 		super();
 		this.eventId = eventId;
 		this.eventName = eventName;

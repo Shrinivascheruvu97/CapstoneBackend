@@ -9,6 +9,12 @@ import com.example.demo.repositroy.EventsRepository;
 import com.example.demo.repositroy.MembersRepository;
 import com.example.demo.repositroy.RemaindersRepository;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,45 +79,88 @@ public class MembersServiceImpl implements MembersService {
     }
 
 
-    @Override
+//    @Override
+//
+//    public EventsDto addEvent(EventsDto eventsDto) {
+//
+//        Members members = membersRepository.findById(eventsDto.getUserId())
+//
+//                .orElseThrow(() -> new ApplicationContextException("Incorrect userId"));
+//
+//     // Check if any events already exist within the given date range
+//
+//        List<Events> existingEvents = eventsRepository.findByFromDateAndToDate(
+//
+//                eventsDto.getFromDate(), eventsDto.getToDate());
+//
+//        if (!existingEvents.isEmpty()) {
+//
+//            throw new IllegalArgumentException("Dates are already booked");
+//
+//        }
+//
+//        Events event = new Events();
+//
+//        event.setEventId(eventsDto.getEventId());
+//
+//        event.setEventName(eventsDto.getEventName());
+//
+//        event.setFromDate(eventsDto.getFromDate());
+//
+//        event.setToDate(eventsDto.getToDate());
+//
+//        
+//       
+//        
+//       
+//
+//       
+//        event.setStatus(eventsDto.getStatus());
+//
+//        event.setMembers(members);
+//
+//        Events savedEvent = eventsRepository.save(event);
+//
+//        return mapToDto(savedEvent);
+//
+//    }
+	
+	
+	
+	@Transactional
+	@Override
+	public EventsDto addEvent(EventsDto eventsDto) {
+	    Members members = membersRepository.findById(eventsDto.getUserId())
+	            .orElseThrow(() -> new ApplicationContextException("Incorrect userId"));
 
-    public EventsDto addEvent(EventsDto eventsDto) {
+	    // Check if any events already exist with the same fromDate and conflicting time slot
+	    List<Events> existingEvents = eventsRepository.findByFromDate(eventsDto.getFromDate());
 
-        Members members = membersRepository.findById(eventsDto.getUserId())
+	    for (Events existingEvent : existingEvents) {
+	        if (eventsOverlap(existingEvent.getFromDate(), existingEvent.getToDate(),
+	                eventsDto.getFromDate(), eventsDto.getToDate())) {
+	            throw new IllegalArgumentException("The selected time slot is already booked.");
+	        }
+	    }
 
-                .orElseThrow(() -> new ApplicationContextException("Incorrect userId"));
+	    Events event = new Events();
+	    event.setEventId(eventsDto.getEventId());
+	    event.setEventName(eventsDto.getEventName());
+	    event.setFromDate(eventsDto.getFromDate());
+	    event.setToDate(eventsDto.getToDate());
+	    event.setStatus(eventsDto.getStatus());
+	    event.setMembers(members);
 
-     // Check if any events already exist within the given date range
+	    Events savedEvent = eventsRepository.save(event);
 
-        List<Events> existingEvents = eventsRepository.findByFromDateAndToDate(
+	    return mapToDto(savedEvent);
+	}
 
-                eventsDto.getFromDate(), eventsDto.getToDate());
+	// Helper method to check if two events overlap
+	private boolean eventsOverlap(LocalDateTime localDateTime, LocalDateTime localDateTime2, LocalDateTime localDateTime3, LocalDateTime localDateTime4) {
+	    return localDateTime.isBefore(localDateTime4) && localDateTime2.isAfter(localDateTime3);
+	}
 
-        if (!existingEvents.isEmpty()) {
-
-            throw new IllegalArgumentException("Dates are already booked");
-
-        }
-
-        Events event = new Events();
-
-        event.setEventId(eventsDto.getEventId());
-
-        event.setEventName(eventsDto.getEventName());
-
-        event.setFromDate(eventsDto.getFromDate());
-
-        event.setToDate(eventsDto.getToDate());
-
-        event.setStatus(eventsDto.getStatus());
-
-        event.setMembers(members);
-
-        Events savedEvent = eventsRepository.save(event);
-
-        return mapToDto(savedEvent);
-
-    }
 
      @Override
 
